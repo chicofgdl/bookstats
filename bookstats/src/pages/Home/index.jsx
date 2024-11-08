@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Navbar from "../../components/Navbar";
 import BookCard from "../../components/BookCard";
 import Sidebar from "../../components/Sidebar";
@@ -6,6 +7,32 @@ import { Box, IconButton } from "@mui/material";
 import { ArrowUpward } from "@mui/icons-material";
 
 export default function Home() {
+    const [books, setBooks] = useState([]);
+
+    // Get dos livros na Google Books API
+    const fetchBooks = async () => {
+        try {
+            const response = await axios.get(
+                "https://www.googleapis.com/books/v1/volumes?q=programming"
+            );
+            const booksData = response.data.items.map((item) => ({
+                id: item.id,
+                title: item.volumeInfo.title,
+                authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "Autor desconhecido",
+                genre: item.volumeInfo.categories ? item.volumeInfo.categories[0] : "Gênero desconhecido",
+                rating: item.volumeInfo.averageRating || "Sem avaliação",
+                coverImage: item.volumeInfo.imageLinks?.thumbnail || null,
+            }));
+            setBooks(booksData);
+        } catch (error) {
+            console.error("Erro ao buscar dados da API:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchBooks();
+    }, []);
+
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -15,20 +42,21 @@ export default function Home() {
             <Sidebar />
             <div className="flex flex-col w-full gap-4">
                 <Navbar />
-                <div className="flex flex-col items-center justify-center py-8 bg-gray-50 rounded-2xl">
-                    <h1 className="text-3xl font-bold text-gray-800 mt-4 mb-8 ">
+                <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl">
+                    <h1 className="text-3xl font-bold text-gray-800 mt-4 mb-8">
                         Bem-vindo ao BookStats
                     </h1>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10 border-t-2 py-8">
-                        <BookCard title="Livro 1" description="dados livro 1" />
-                        <BookCard title="Livro 2" description="dados livro 2" />
-                        <BookCard title="Livro 3" description="dados livro 3" />
-                        <BookCard title="Livro 4" description="dados livro 4" />
-                        <BookCard title="Livro 5" description="dados livro 5" />
-                        <BookCard title="Livro 6" description="dados livro 6" />
-                        <BookCard title="Livro 7" description="dados livro 7" />
-                        <BookCard title="Livro 8" description="dados livro 8" />
-                        <BookCard title="Livro 9" description="dados livro 9" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 p-4">
+                        {books.map((book) => (
+                            <BookCard
+                                key={book.id}
+                                title={book.title}
+                                author={book.authors}
+                                genre={book.genre}
+                                rating={book.rating}
+                                coverImage={book.coverImage}
+                            />
+                        ))}
                     </div>
                     {/* Botão fixo para rolar até o topo */}
                     <Box
