@@ -1,38 +1,44 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import Navbar from "../../components/Navbar";
 import BookCard from "../../components/BookCard";
 import Sidebar from "../../components/Sidebar";
 import { Box, IconButton } from "@mui/material";
 import { ArrowUpward } from "@mui/icons-material";
+import { SearchContext } from "../../context/SearchContext";
 
 export default function Home() {
     const [books, setBooks] = useState([]);
+    const { searchTerm } = useContext(SearchContext);
 
-    // Get dos livros na Google Books API
-    const fetchBooks = async () => {
-        try {
-            const response = await axios.get(
-                "https://www.googleapis.com/books/v1/volumes?q=programming"
-            );
-            const booksData = response.data.items.map((item) => ({
-                id: item.id,
-                title: item.volumeInfo.title,
-                authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "Autor desconhecido",
-                genre: item.volumeInfo.categories ? item.volumeInfo.categories[0] : "Gênero desconhecido",
-                rating: item.volumeInfo.averageRating || "Sem avaliação",
-                coverImage: item.volumeInfo.imageLinks?.thumbnail || null,
-            }));
-            setBooks(booksData);
-        } catch (error) {
-            console.error("Erro ao buscar dados da API:", error);
-        }
-    };
-
+    // Função para buscar livros na Google Books API
     useEffect(() => {
-        fetchBooks();
-    }, []);
+        // Define o valor do termo de busca como "*" caso esteja vazio
+        const query = searchTerm || "*";
 
+        const fetchBooks = async () => {
+            try {
+                const response = await axios.get(
+                    `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=20&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`
+                );
+                const booksData = response.data.items.map((item) => ({
+                    id: item.id,
+                    title: item.volumeInfo.title,
+                    authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "Autor desconhecido",
+                    genre: item.volumeInfo.categories ? item.volumeInfo.categories[0] : "Gênero desconhecido",
+                    rating: item.volumeInfo.averageRating || "Sem avaliação",
+                    coverImage: item.volumeInfo.imageLinks?.thumbnail || null,
+                }));
+                setBooks(booksData);
+            } catch (error) {
+                console.error("Erro ao buscar dados da API:", error);
+            }
+        };
+
+        fetchBooks();
+    }, [searchTerm]); // Executa fetchBooks sempre que searchTerm mudar
+
+    // Função para rolar para o topo
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -58,15 +64,7 @@ export default function Home() {
                             />
                         ))}
                     </div>
-                    {/* Botão fixo para rolar até o topo */}
-                    <Box
-                        sx={{
-                            position: "fixed",
-                            bottom: 60,
-                            right: 80,
-                            zIndex: 1000,
-                        }}
-                    >
+                    <Box sx={{ position: "fixed", bottom: 60, right: 80, zIndex: 1000 }}>
                         <IconButton
                             onClick={scrollToTop}
                             style={{
