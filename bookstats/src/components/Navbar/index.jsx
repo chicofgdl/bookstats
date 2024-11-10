@@ -5,7 +5,7 @@ import AutocompleteSearch from "../AutocompleteSearch";
 
 export default function Navbar() {
     return (
-        <nav className="bg-green-500 py-6 px-12 rounded-2xl h-full">
+        <nav className="bg-green-500 py-6 px-12 rounded-2xl">
             <div className="container mx-auto flex justify-between">                
                 <AutocompleteSearch />
                 <div className="flex flex-row justify-center items-center space-x-8">

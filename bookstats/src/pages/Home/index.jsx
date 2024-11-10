@@ -24,8 +24,12 @@ export default function Home() {
                 const booksData = response.data.items.map((item) => ({
                     id: item.id,
                     title: item.volumeInfo.title,
-                    authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "Autor desconhecido",
-                    genre: item.volumeInfo.categories ? item.volumeInfo.categories[0] : "Gênero desconhecido",
+                    authors: item.volumeInfo.authors
+                        ? item.volumeInfo.authors.join(", ")
+                        : "Autor desconhecido",
+                    genre: item.volumeInfo.categories
+                        ? item.volumeInfo.categories[0]
+                        : "Gênero desconhecido",
                     rating: item.volumeInfo.averageRating || "Sem avaliação",
                     coverImage: item.volumeInfo.imageLinks?.thumbnail || null,
                 }));
@@ -64,7 +68,14 @@ export default function Home() {
                             />
                         ))}
                     </div>
-                    <Box sx={{ position: "fixed", bottom: 60, right: 80, zIndex: 1000 }}>
+                    <Box
+                        sx={{
+                            position: "fixed",
+                            bottom: 60,
+                            right: 80,
+                            zIndex: 1000,
+                        }}
+                    >
                         <IconButton
                             onClick={scrollToTop}
                             style={{
