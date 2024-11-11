@@ -10,6 +10,47 @@ export default function BookDetails() {
     const { darkMode } = useContext(ThemeContext);
     const { id } = useParams();
     const [book, setBook] = useState(null);
+    const [selectedShelf, setSelectedShelf] = useState("");
+
+    const addToShelf = async (shelfId) => {
+        try {
+            await axios.post(
+                `https://www.googleapis.com/books/v1/mylibrary/bookshelves/${shelfId}/addVolume?volumeId=${id}&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "authToken"
+                        )}`,
+                    },
+                }
+            );
+            alert("Livro adicionado com sucesso!");
+            // fetchBookshelves();
+        } catch (error) {
+            console.error("Erro ao adicionar livro à estante:", error);
+        }
+    };
+
+    const removeFromShelf = async (shelfId) => {
+        try {
+            await axios.post(
+                `https://www.googleapis.com/books/v1/mylibrary/bookshelves/${shelfId}/removeVolume?volumeId=${id}&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "authToken"
+                        )}`,
+                    },
+                }
+            );
+            alert("Livro removido com sucesso!");
+            // fetchBookshelves();
+        } catch (error) {
+            console.error("Erro ao remover livro da estante:", error);
+        }
+    };
 
     useEffect(() => {
         const fetchBookDetails = async () => {
@@ -89,7 +130,13 @@ export default function BookDetails() {
                                     src={book.coverImage}
                                     alt={book.title}
                                 />
-                                <div className={`${darkMode ? "bg-gray-500":"bg-green-200/80"} p-6 rounded-xl h-full`}>
+                                <div
+                                    className={`${
+                                        darkMode
+                                            ? "bg-gray-500"
+                                            : "bg-green-200/80"
+                                    } p-6 rounded-xl h-full`}
+                                >
                                     <strong>Descrição:</strong>{" "}
                                     <div
                                         dangerouslySetInnerHTML={{
@@ -100,16 +147,32 @@ export default function BookDetails() {
                                     ></div>
                                 </div>
                             </div>
-                            <div className={`flex flex-row ${darkMode ? "bg-gray-500":"bg-green-200/80"} p-6 rounded-xl gap-8`}>
+                            <div
+                                className={`flex flex-row ${
+                                    darkMode ? "bg-gray-500" : "bg-green-200/80"
+                                } p-6 rounded-xl gap-8`}
+                            >
                                 <div className="flex flex-col gap-6">
                                     <p>
-                                        <strong className={` ${darkMode ? "bg-gray-700" : "bg-green-500"} text-white p-1 rounded-xl`}>
+                                        <strong
+                                            className={` ${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-500"
+                                            } text-white p-1 rounded-xl`}
+                                        >
                                             Autores
                                         </strong>{" "}
                                         {book.authors || "Desconhecido"}
                                     </p>
                                     <p>
-                                        <strong className={` ${darkMode ? "bg-gray-700" : "bg-green-500"} text-white p-1 rounded-xl`}>
+                                        <strong
+                                            className={` ${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-500"
+                                            } text-white p-1 rounded-xl`}
+                                        >
                                             Gênero
                                         </strong>{" "}
                                         {book.genre || "Desconhecido"}
@@ -117,13 +180,25 @@ export default function BookDetails() {
                                 </div>
                                 <div className="flex flex-col gap-6">
                                     <p>
-                                        <strong className={` ${darkMode ? "bg-gray-700" : "bg-green-500"} text-white p-1 rounded-xl`}>
+                                        <strong
+                                            className={` ${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-500"
+                                            } text-white p-1 rounded-xl`}
+                                        >
                                             Avaliação
                                         </strong>{" "}
                                         {book.rating || "Não avaliado"}
                                     </p>
                                     <p>
-                                        <strong className={` ${darkMode ? "bg-gray-700" : "bg-green-500"} text-white p-1 rounded-xl`}>
+                                        <strong
+                                            className={` ${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-500"
+                                            } text-white p-1 rounded-xl`}
+                                        >
                                             Editora
                                         </strong>{" "}
                                         {book.publisher || "Desconhecido"}
@@ -131,13 +206,25 @@ export default function BookDetails() {
                                 </div>
                                 <div className="flex flex-col gap-6">
                                     <p>
-                                        <strong className={` ${darkMode ? "bg-gray-700" : "bg-green-500"} text-white p-1 rounded-xl`}>
+                                        <strong
+                                            className={` ${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-500"
+                                            } text-white p-1 rounded-xl`}
+                                        >
                                             Idioma
                                         </strong>{" "}
                                         {book.language || "Desconhecido"}
                                     </p>
                                     <p>
-                                        <strong className={` ${darkMode ? "bg-gray-700" : "bg-green-500"} text-white p-1 rounded-xl`}>
+                                        <strong
+                                            className={` ${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-500"
+                                            } text-white p-1 rounded-xl`}
+                                        >
                                             Páginas
                                         </strong>{" "}
                                         {book.pageCount || "Não especificado"}
@@ -145,7 +232,13 @@ export default function BookDetails() {
                                 </div>
                                 <div className="flex flex-col gap-6">
                                     <p>
-                                        <strong className={` ${darkMode ? "bg-gray-700" : "bg-green-500"} text-white p-1 rounded-xl`}>
+                                        <strong
+                                            className={` ${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-500"
+                                            } text-white p-1 rounded-xl`}
+                                        >
                                             Data de Publicação
                                         </strong>{" "}
                                         {book.publishedDate
@@ -155,13 +248,45 @@ export default function BookDetails() {
                                             : "Desconhecido"}
                                     </p>
                                     <p>
-                                        <strong className={` ${darkMode ? "bg-gray-700" : "bg-green-500"} text-white p-1 rounded-xl`}>
+                                        <strong
+                                            className={` ${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-500"
+                                            } text-white p-1 rounded-xl`}
+                                        >
                                             Preço
                                         </strong>{" "}
                                         {book.price || "Não disponível"}
                                     </p>
                                 </div>
                             </div>
+                        </div>
+                        <div>
+                            <label>Escolha uma estante:</label>
+                            <select
+                                onChange={(e) =>
+                                    setSelectedShelf(e.target.value)
+                                }
+                            >
+                                <option value="">Selecione</option>
+                                <option value="0">Favoritos</option>
+                                <option value="1">Lendo no momento</option>
+                                <option value="2">Vou ler</option>
+                                <option value="3">Lidos</option>
+                            </select>
+                            <button
+                                onClick={() => addToShelf(selectedShelf)}
+                                disabled={!selectedShelf}
+                            >
+                                Adicionar
+                            </button>
+                            <button
+                                onClick={() => removeFromShelf(selectedShelf)}
+                                disabled={!selectedShelf}
+                            >
+                                Remover
+                            </button>
                         </div>
                     </div>
                 </div>
