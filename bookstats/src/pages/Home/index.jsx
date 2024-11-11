@@ -6,10 +6,17 @@ import Sidebar from "../../components/Sidebar";
 import { Box, IconButton } from "@mui/material";
 import { ArrowUpward } from "@mui/icons-material";
 import { SearchContext } from "../../context/SearchContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
     const [books, setBooks] = useState([]);
     const { searchTerm } = useContext(SearchContext);
+
+    const navigate = useNavigate();
+
+    const handleBookClick = (bookId) => {
+        navigate(`/books/${bookId}`);
+    };
 
     // Função para buscar livros na Google Books API
     useEffect(() => {
@@ -24,8 +31,12 @@ export default function Home() {
                 const booksData = response.data.items.map((item) => ({
                     id: item.id,
                     title: item.volumeInfo.title,
-                    authors: item.volumeInfo.authors ? item.volumeInfo.authors.join(", ") : "Autor desconhecido",
-                    genre: item.volumeInfo.categories ? item.volumeInfo.categories[0] : "Gênero desconhecido",
+                    authors: item.volumeInfo.authors
+                        ? item.volumeInfo.authors.join(", ")
+                        : "Autor desconhecido",
+                    genre: item.volumeInfo.categories
+                        ? item.volumeInfo.categories[0]
+                        : "Gênero desconhecido",
                     rating: item.volumeInfo.averageRating || "Sem avaliação",
                     coverImage: item.volumeInfo.imageLinks?.thumbnail || null,
                 }));
@@ -61,10 +72,18 @@ export default function Home() {
                                 genre={book.genre}
                                 rating={book.rating}
                                 coverImage={book.coverImage}
+                                onClick={() => handleBookClick(book.id)}
                             />
                         ))}
                     </div>
-                    <Box sx={{ position: "fixed", bottom: 60, right: 80, zIndex: 1000 }}>
+                    <Box
+                        sx={{
+                            position: "fixed",
+                            bottom: 60,
+                            right: 80,
+                            zIndex: 1000,
+                        }}
+                    >
                         <IconButton
                             onClick={scrollToTop}
                             style={{
