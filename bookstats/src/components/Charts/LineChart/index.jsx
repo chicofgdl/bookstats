@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ResponsiveLine } from '@nivo/line';
+import { ThemeContext } from '../../../context/ThemeContext';
 
 // Exemplo de dados para o gráfico de linhas
 // const lineData = [
@@ -24,6 +25,33 @@ import { ResponsiveLine } from '@nivo/line';
 // ];
 
 const LineChart = ({ data }) => {
+    const { darkMode } = useContext(ThemeContext);
+
+    const theme = {
+        axis: {
+            ticks: {
+                text: {
+                    fill: darkMode ? '#fff' : '#000', // Cor do texto dos ticks
+                },
+            },
+            legend: {
+                text: {
+                    fill: darkMode ? '#fff' : '#000', // Cor do texto da legenda
+                },
+            },
+        },
+        grid: {
+            line: {
+                stroke: darkMode ? '#555' : '#ddd', // Cor das linhas da grade
+            },
+        },
+        tooltip: {
+            container: {
+                background: darkMode ? '#333' : '#fff', // Cor do fundo do tooltip
+                color: darkMode ? '#fff' : '#000', // Cor do texto do tooltip
+            },
+        },
+    };
     return (
         <div style={{ height: 400 }}>
             <ResponsiveLine
@@ -47,6 +75,7 @@ const LineChart = ({ data }) => {
                     legend: 'Ano',
                     legendOffset: 36,
                     legendPosition: 'middle',
+                    tickTextColor: darkMode ? '#fff' : '#000',
                 }}
                 axisLeft={{
                     tickSize: 5,
@@ -55,6 +84,7 @@ const LineChart = ({ data }) => {
                     legend: 'Média das Avaliações',
                     legendOffset: -40,
                     legendPosition: 'middle',
+                    tickTextColor: darkMode ? '#fff' : '#000',
                 }}
                 pointSize={10}
                 pointColor={{ theme: 'background' }}
@@ -78,6 +108,7 @@ const LineChart = ({ data }) => {
                         symbolSize: 12,
                         symbolShape: 'circle',
                         symbolBorderColor: 'rgba(0, 0, 0, .5)',
+                        itemTextColor: darkMode ? '#fff' : '#000',
                     },
                 ]}
             />

@@ -1,21 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext  } from "react";
 import AutocompleteSearch from "../AutocompleteSearch";
 import { Switch, styled } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider as MuiThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeContext } from "../../context/ThemeContext";
 
 // Define temas claro e escuro
-const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-  },
-});
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+const lightTheme = createTheme({ palette: { mode: "light" } });
+const darkTheme = createTheme({ palette: { mode: "dark" } });
 
 // Customiza o switch para ter ícones de sol e lua minimalistas
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -66,25 +58,20 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export default function Navbar() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  // Alterna o tema
-  const handleThemeChange = () => {
-    setDarkMode(!darkMode);
-  };
+  const { darkMode, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+    <MuiThemeProvider  theme={darkMode ? darkTheme : lightTheme}>
       <CssBaseline />
-      <nav className={`py-6 px-12 rounded-2xl ${darkMode ? "bg-gray-800" : "bg-green-500"}`}>
+      <nav className={`py-6 px-12 rounded-2xl ${darkMode ? "bg-gray-700" : "bg-green-500"}`}>
         <div className="container mx-auto flex justify-between">
           <AutocompleteSearch />
           <div className="flex flex-row justify-center items-center space-x-8">
             {/* Switch customizado para modo noturno */}
-            <MaterialUISwitch checked={darkMode} onChange={handleThemeChange} />
+            <MaterialUISwitch checked={darkMode} onChange={toggleTheme} />
           </div>
         </div>
       </nav>
-    </ThemeProvider>
+    </MuiThemeProvider >
   );
 }

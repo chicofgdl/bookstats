@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import BarChart from "../../components/Charts/BarChart";
@@ -14,13 +14,13 @@ import {
     Button,
 } from "@mui/material";
 import dayjs from "dayjs"; // Biblioteca para manipulação de datas
-
-
+import { ThemeContext } from "../../context/ThemeContext";
 
 // Defina o intervalo de anos que você quer mostrar (exemplo de 1900 a 2100)
 // const yearRange = Array.from({ length: 2101 - 1900 }, (_, index) => 1900 + index);
 
 export default function Dashboard() {
+    const { darkMode } = useContext(ThemeContext);
     const [chartType, setChartType] = useState("bar"); // Estado para controlar o tipo de gráfico da análise de Distribuições por gênero
     const [selectedGenres, setSelectedGenres] = useState([]); // Gêneros selecionados pelo usuário
     const [startDate, setStartDate] = useState(""); // Data de início para o gráfico
@@ -96,10 +96,17 @@ export default function Dashboard() {
                 return { genre, value: avgRating };
             };
 
-            const chartData = await Promise.all(selectedGenres.map(fetchGenreRatingData));
+            const chartData = await Promise.all(
+                selectedGenres.map(fetchGenreRatingData)
+            );
             setBarChartData(chartData);
-            setPieChartData(chartData.map((data) => ({ id: data.genre, label: data.genre, value: data.value })));
-
+            setPieChartData(
+                chartData.map((data) => ({
+                    id: data.genre,
+                    label: data.genre,
+                    value: data.value,
+                }))
+            );
         } catch (error) {
             console.error("Erro ao buscar dados para o gráfico:", error);
         }
@@ -214,93 +221,90 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="p-4 bg-gray-200 flex flex-row gap-6 w-full h-full">
+        <div
+            className={`p-4 ${
+                darkMode ? "bg-gray-900" : "bg-gray-200"
+            } flex flex-row gap-6 w-full h-full`}
+        >
             <Sidebar />
             <div className="flex flex-col w-full gap-4">
                 <Navbar />
 
-                <div className="flex flex-col items-start justify-start p-8 bg-gray-50 rounded-2xl shadow-lg">
-                    <h1 className="text-3xl font-bold text-gray-800 mt-4 mb-8 self-center">
+                <div
+                    className={`flex flex-col items-start justify-start p-8 ${
+                        darkMode ? "bg-gray-700" : "bg-gray-50"
+                    } rounded-2xl shadow-lg`}
+                >
+                    <h1
+                        className={`text-3xl font-bold ${
+                            darkMode ? "text-white" : "text-gray-800"
+                        } mt-4 mb-8 self-center`}
+                    >
                         Distribuições por gênero
                     </h1>
 
                     {/* Seletor de gráfico */}
                     <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
-                    <FormControl sx={{ mb: 4 }}>
-                        <InputLabel>Escolha o Gráfico</InputLabel>
-                        <Select
-                            value={chartType}
-                            label="Escolha o Gráfico"
-                            onChange={handleChange}
-                            sx={{
-                                backgroundColor: "white",
-                                borderRadius: 1,
-                                borderColor: "green",
-                                boxShadow: 1,
-                                "& .MuiOutlinedInput-root": {
-                                    "& fieldset": {
-                                        borderColor: "green",
-                                    },
-                                },
-                            }}
-                        >
-                            <MenuItem value="bar">Gráfico de Barras</MenuItem>
-                            <MenuItem value="pie">Gráfico de Pizza</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <FormControl sx={{ minWidth: 200, mb: 4 }}>
-                        <InputLabel>Selecione Gêneros</InputLabel>
-                        <Select multiple value={selectedGenres} onChange={handleGenreChange} renderValue={(selected) => selected.join(", ")}>
-                            {availableGenres.map((genre) => (
-                                <MenuItem key={genre} value={genre}>{genre}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <Button variant="contained" onClick={fetchChartData} sx={{height:56}}>Atualizar Gráfico</Button>
-                    </Box>
-                    <Box
-                        sx={{
-                            width: "100%",
-                            height: 400,
-                            position: "relative",
-                        }}
-                    >
-                        {chartType === "bar" && <BarChart data={barChartData} />}
-                        {chartType === "pie" && <PieChart data={pieChartData} />}
-                    </Box>
-                </div>
-                {/* Gráfico de linha */}
-                <div className="flex flex-col items-start justify-start p-8 bg-gray-50 rounded-2xl shadow-lg mt-8">
-                    <h1 className="text-3xl font-bold text-gray-800 mt-4 mb-8 self-center">
-                        Gráfico de Linha
-                    </h1>
-                    {/* Filtros de Data e Gênero */}
-                    <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
-                        <TextField
-                            label="Ano de Início"
-                            type="number"
-                            value={startDate}
-                            onChange={(event) =>
-                                handleDateChange(event, "start")
-                            }
-                            InputLabelProps={{ shrink: true }}
-                            inputProps={{ min: 1900, max: 2100 }}
-                        />
-                        <TextField
-                            label="Ano de Fim"
-                            type="number"
-                            value={endDate}
-                            onChange={(event) => handleDateChange(event, "end")}
-                            InputLabelProps={{ shrink: true }}
-                            inputProps={{ min: 1900, max: 2100 }}
-                        />
-                        <FormControl sx={{ minWidth: 200 }}>
-                            <InputLabel>Selecione Gêneros</InputLabel>
+                        <FormControl sx={{ mb: 4, minWidth: 150 }}>
+                            <InputLabel
+                                sx={{ color: darkMode ? "#fff" : "inherit" }}
+                            >
+                                Escolha o Gráfico
+                            </InputLabel>
+                            <Select
+                                value={chartType}
+                                label="Escolha o Gráfico"
+                                onChange={handleChange}
+                                sx={{
+                                    backgroundColor: darkMode
+                                        ? "#424242"
+                                        : "white",
+                                    color: darkMode ? "#fff" : "inherit",
+                                    borderRadius: 1,
+                                    borderColor: "green",
+                                    "&:hover .MuiOutlinedInput-notchedOutline":
+                                        {
+                                            borderColor: darkMode
+                                                ? "#fff"
+                                                : "gray",
+                                        },
+                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                        {
+                                            borderColor: darkMode
+                                                ? "#fff"
+                                                : "green",
+                                        },
+                                }}
+                            >
+                                <MenuItem value="bar">
+                                    Gráfico de Barras
+                                </MenuItem>
+                                <MenuItem value="pie">
+                                    Gráfico de Pizza
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl sx={{ minWidth: 200, mb: 4 }}>
+                            <InputLabel
+                                sx={{ color: darkMode ? "#fff" : "inherit" }}
+                            >
+                                Selecione Gêneros
+                            </InputLabel>
                             <Select
                                 multiple
                                 value={selectedGenres}
                                 onChange={handleGenreChange}
                                 renderValue={(selected) => selected.join(", ")}
+                                sx={{
+                                    backgroundColor: darkMode ? "#424242" : "white",
+                                    color: darkMode ? "#fff" : "inherit",
+                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: darkMode ? "#fff" : "gray",
+                                    },
+                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: darkMode ? "#fff" : "green",
+                                    },
+                                }}
                             >
                                 {availableGenres.map((genre) => (
                                     <MenuItem key={genre} value={genre}>
@@ -309,7 +313,137 @@ export default function Dashboard() {
                                 ))}
                             </Select>
                         </FormControl>
-                        <Button variant="contained" onClick={fetchLineData}>
+                        <Button
+                            variant="contained"
+                            onClick={fetchChartData}
+                            sx={{
+                                height: 56,
+                                backgroundColor: darkMode
+                                    ? "#1f2937"
+                                    : "#22c55e",
+                                "&:hover": {
+                                    backgroundColor: darkMode
+                                        ? "#111827"
+                                        : "#16a34a",
+                                },
+                            }}
+                        >
+                            Atualizar Gráfico
+                        </Button>
+                    </Box>
+                    <Box
+                        sx={{
+                            width: "100%",
+                            height: 400,
+                            position: "relative",
+                            backgroundColor: darkMode ? "#424242" : "white",
+                            borderRadius: 2,
+                        }}
+                    >
+                        {chartType === "bar" && (
+                            <BarChart data={barChartData} />
+                        )}
+                        {chartType === "pie" && (
+                            <PieChart data={pieChartData} />
+                        )}
+                    </Box>
+                </div>
+                {/* Gráfico de linha */}
+                <div
+                    className={`flex flex-col items-start justify-start p-8 ${
+                        darkMode ? "bg-gray-700" : "bg-gray-50"
+                    } rounded-2xl shadow-lg mt-8`}
+                >
+                    <h1
+                        className={`text-3xl font-bold ${
+                            darkMode ? "text-white" : "text-gray-800"
+                        } mt-4 mb-8 self-center`}
+                    >
+                        Gráfico de Linha
+                    </h1>
+                    {/* Filtros de Data e Gênero */}
+                    <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
+                        <TextField
+                            label="Ano de Início"
+                            type="number"
+                            value={startDate}
+                            onChange={(event) => handleDateChange(event, "start")}
+                            slotProps={{
+                                input: { min: 1900, max: 2024 },
+                                inputLabel: { shrink: true, style: { color: darkMode ? "#fff" : "inherit" } },
+                            }}
+                            sx={{
+                                backgroundColor: darkMode ? "#424242" : "white",
+                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                    borderColor: darkMode ? "#fff" : "gray",
+                                },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                    borderColor: darkMode ? "#fff" : "green",
+                                },
+                            }}
+                        />
+                        <TextField
+                            label="Ano de Fim"
+                            type="number"
+                            value={endDate}
+                            onChange={(event) => handleDateChange(event, "end")}
+                            slotProps={{
+                                input: { min: 1900, max: 2024 },
+                                inputLabel: { shrink: true, style: { color: darkMode ? "#fff" : "inherit" } },
+                            }}
+                            sx={{
+                                backgroundColor: darkMode ? "#424242" : "white",
+                                "&:hover .MuiOutlinedInput-notchedOutline": {
+                                    borderColor: darkMode ? "#fff" : "gray",
+                                },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                    borderColor: darkMode ? "#fff" : "green",
+                                },
+                            }}
+                        />
+                        <FormControl sx={{ minWidth: 200 }}>
+                            <InputLabel
+                                sx={{ color: darkMode ? "#fff" : "inherit" }}
+                            >
+                                Selecione Gêneros
+                            </InputLabel>
+                            <Select
+                                multiple
+                                value={selectedGenres}
+                                onChange={handleGenreChange}
+                                renderValue={(selected) => selected.join(", ")}
+                                sx={{
+                                    backgroundColor: darkMode ? "#424242" : "white",
+                                    color: darkMode ? "#fff" : "inherit",
+                                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: darkMode ? "#fff" : "gray",
+                                    },
+                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                                        borderColor: darkMode ? "#fff" : "green",
+                                    },
+                                }}
+                            >
+                                {availableGenres.map((genre) => (
+                                    <MenuItem key={genre} value={genre}>
+                                        {genre}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Button
+                            variant="contained"
+                            onClick={fetchLineData}
+                            sx={{
+                                backgroundColor: darkMode
+                                    ? "#1f2937"
+                                    : "#22c55e",
+                                "&:hover": {
+                                    backgroundColor: darkMode
+                                        ? "#111827"
+                                        : "#16a34a",
+                                },
+                            }}
+                        >
                             Atualizar Gráfico
                         </Button>
                     </Box>
@@ -319,6 +453,8 @@ export default function Dashboard() {
                             width: "100%",
                             height: 400,
                             position: "relative",
+                            backgroundColor: darkMode ? "#424242" : "white",
+                            borderRadius: 2,
                         }}
                     >
                         {lineData.length > 0 ? (

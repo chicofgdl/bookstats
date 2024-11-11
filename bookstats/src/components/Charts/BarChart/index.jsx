@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { ResponsiveBar } from '@nivo/bar';
+import { ThemeContext } from '../../../context/ThemeContext';
 
 // Exemplo de dados para o gráfico de barras
 // const barData = [
@@ -10,6 +11,22 @@ import { ResponsiveBar } from '@nivo/bar';
 // ];
 
 const BarChart = ({ data }) => {
+    const { darkMode } = useContext(ThemeContext);
+
+    const theme = {
+        axis: {
+            ticks: {
+                text: {
+                    fill: darkMode ? '#fff' : '#000', // Cor do texto dos ticks
+                },
+            },
+            legend: {
+                text: {
+                    fill: darkMode ? '#fff' : '#000', // Cor do texto da legenda
+                },
+            },
+        },
+    };
     return (
         <div style={{ height: 400 }}>
             <ResponsiveBar
@@ -40,6 +57,7 @@ const BarChart = ({ data }) => {
                 animate={true}
                 motionStiffness={90}
                 motionDamping={15}
+                theme={theme}  // Aplicando o tema
             />
         </div>
     );

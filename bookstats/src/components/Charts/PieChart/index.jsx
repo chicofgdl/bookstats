@@ -1,15 +1,10 @@
-import React from 'react';
-import { ResponsivePie } from '@nivo/pie';
-
-// Exemplo de dados para o gráfico de pizza
-// const pieData = [
-//     { id: "Romance", label: "A", value: 55 },
-//     { id: "Programação", label: "A", value: 15 },
-//     { id: "Teror", label: "B", value: 25 },
-//     { id: "Aventura", label: "C", value: 20 },
-// ];
+import React, { useContext } from "react";
+import { ResponsivePie } from "@nivo/pie";
+import { ThemeContext } from "../../../context/ThemeContext";
 
 const PieChart = ({ data }) => {
+    const { darkMode } = useContext(ThemeContext);
+
     return (
         <div style={{ height: 400 }}>
             <ResponsivePie
@@ -18,23 +13,23 @@ const PieChart = ({ data }) => {
                 innerRadius={0.5}
                 padAngle={0.7}
                 cornerRadius={3}
-                colors={{ scheme: 'nivo' }}
+                colors={{ scheme: "nivo" }}
                 borderWidth={1}
-                borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
+                borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
                 radialLabel={(d) => `${d.id}: ${d.value}`}
                 enableArcLinkLabels={true}
                 enableArcLabels={true}
                 arcLinkLabel={(d) => `${d.id}`}
-                sortByValue={true}      
-                
+                sortByValue={true}
                 radialLabelsSkipAngle={10}
-                radialLabelsTextColor="#333333"
                 radialLabelsLinkColor={{ from: "color" }}
                 sliceLabelsSkipAngle={10}
-                sliceLabelsTextColor="#333333"
                 animate={true}
                 motionStiffness={90}
                 motionDamping={15}
+                arcLinkLabelsTextColor="#D1D1D1"
+                sliceLabelsTextColor="#D1D1D1"
+                radialLabelsTextColor="#D1D1D1"
             />
         </div>
     );

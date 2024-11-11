@@ -1,13 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Link } from "react-router-dom";
 import { Home, Search, Book, Dashboard, Settings, Info  } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText, Typography, Box  } from "@mui/material";
+import { ThemeContext } from "../../context/ThemeContext";
 
 export default function Sidebar() {
-
+    const { darkMode } = useContext(ThemeContext);
     return (
         <Box
-            className="bg-green-500 rounded-2xl p-6"
+            className={`${ darkMode ? "bg-gray-700" : "bg-green-500"} rounded-2xl p-6`}
             sx={{
                 width: 320,
                 height: "100vh",
