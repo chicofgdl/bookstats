@@ -6,9 +6,13 @@ import Sidebar from "../../components/Sidebar";
 import { Box, IconButton } from "@mui/material";
 import { ArrowUpward } from "@mui/icons-material";
 import { SearchContext } from "../../context/SearchContext";
+import { ThemeContext } from "../../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+
+    const { darkMode } = useContext(ThemeContext);
+
     const [books, setBooks] = useState([]);
     const { searchTerm } = useContext(SearchContext);
 
@@ -55,12 +59,12 @@ export default function Home() {
     };
 
     return (
-        <div className="p-4 bg-gray-200 flex flex-row gap-6 w-full h-full">
+        <div className={`p-4 ${darkMode ? "bg-gray-900" : "bg-gray-200"} flex flex-row gap-6 w-full h-full`}>
             <Sidebar />
             <div className="flex flex-col w-full gap-4">
                 <Navbar />
-                <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-2xl">
-                    <h1 className="text-3xl font-bold text-gray-800 mt-4 mb-8">
+                <div className={`flex flex-col items-center justify-center p-8 ${darkMode ? "bg-gray-700" : "bg-gray-50"} rounded-2xl`}>
+                    <h1 className={`text-3xl font-bold ${darkMode ? "text-white" : "text-gray-800"} mt-4 mb-8`}>
                         Bem-vindo ao BookStats
                     </h1>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 p-4">
@@ -88,7 +92,7 @@ export default function Home() {
                             onClick={scrollToTop}
                             style={{
                                 color: "white",
-                                backgroundColor: "#22c55e",
+                                backgroundColor: darkMode ? "#111827" : "#22c55e",
                                 borderRadius: "50%",
                                 boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                             }}
