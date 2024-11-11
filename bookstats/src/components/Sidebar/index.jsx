@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import { Link } from "react-router-dom";
-import { Home, Search, Book, Dashboard, Settings, Info  } from "@mui/icons-material";
+import { Home, Book, Dashboard, Settings, Info  } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText, Typography, Box  } from "@mui/material";
 import { ThemeContext } from "../../context/ThemeContext";
 
@@ -31,18 +31,11 @@ export default function Sidebar() {
                     <ListItemText primary="Home" primaryTypographyProps={{ style: { color: "white" } }} />
                 </ListItem>
 
-                <ListItem component={Link} to="/pesquisa" button>
-                    <ListItemIcon>
-                        <Search style={{ color: "white" }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Pesquisa" primaryTypographyProps={{ style: { color: "white" } }} />
-                </ListItem>
-
-                <ListItem component={Link} to="/livros" button>
+                <ListItem component={Link} to="/bookshelves" button>
                     <ListItemIcon>
                         <Book style={{ color: "white" }} />
                     </ListItemIcon>
-                    <ListItemText primary="Livros" primaryTypographyProps={{ style: { color: "white" } }} />
+                    <ListItemText primary="Estantes" primaryTypographyProps={{ style: { color: "white" } }} />
                 </ListItem>
 
                 <ListItem component={Link} to="/dashboard" button>
@@ -52,12 +45,12 @@ export default function Sidebar() {
                     <ListItemText primary="Dashboard" primaryTypographyProps={{ style: { color: "white" } }} />
                 </ListItem>
 
-                <ListItem component={Link} to="/settings" button>
+                {/* <ListItem component={Link} to="/settings" button>
                     <ListItemIcon>
                         <Settings style={{ color: "white" }} />
                     </ListItemIcon>
                     <ListItemText primary="Settings" primaryTypographyProps={{ style: { color: "white" } }} />
-                </ListItem>
+                </ListItem> */}
             </List>
 
             {/* "About" no final */}

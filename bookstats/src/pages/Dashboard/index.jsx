@@ -359,7 +359,7 @@ export default function Dashboard() {
                             darkMode ? "text-white" : "text-gray-800"
                         } mt-4 mb-8 self-center`}
                     >
-                        Gráfico de Linha
+                        Evolução da média de avaliações
                     </h1>
                     {/* Filtros de Data e Gênero */}
                     <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
