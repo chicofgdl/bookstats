@@ -5,6 +5,7 @@ import BarChart from "../../components/Charts/BarChart";
 import PieChart from "../../components/Charts/PieChart";
 import LineChart from "../../components/Charts/LineChart";
 import {
+    Autocomplete,
     Select,
     MenuItem,
     FormControl,
@@ -29,35 +30,9 @@ const pieData = [
     { id: "Aventura", label: "C", value: 20 },
 ];
 
-// const lineData = [
-//     {
-//         id: "Romance",
-//         data: [
-//             { x: "2020", y: 350 },
-//             { x: "2021", y: 100 },
-//             { x: "2022", y: 150 },
-//             { x: "2023", y: 200 },
-//         ],
-//     },
-//     {
-//         id: "Terror",
-//         data: [
-//             { x: "2020", y: 150 },
-//             { x: "2021", y: 200 },
-//             { x: "2022", y: 250 },
-//             { x: "2023", y: 300 },
-//         ],
-//     },
-//     {
-//         id: "Aventura",
-//         data: [
-//             { x: "2020", y: 250 },
-//             { x: "2021", y: 250 },
-//             { x: "2022", y: 150 },
-//             { x: "2023", y: 100 },
-//         ],
-//     },
-// ];
+// Defina o intervalo de anos que você quer mostrar (exemplo de 1900 a 2100)
+// const yearRange = Array.from({ length: 2101 - 1900 }, (_, index) => 1900 + index);
+
 
 export default function Dashboard() {
     const [chartType, setChartType] = useState("bar"); // Estado para controlar o tipo de gráfico da análise de Distribuições por gênero
@@ -67,11 +42,9 @@ export default function Dashboard() {
     const [lineData, setLineData] = useState([]); // Dados do gráfico de linha
 
     const availableGenres = [
-        "Action and Adventure",
         "Arts",
         "Biographies",
         "Business",
-        "Children's",
         "Classics",
         "Comics",
         "Cookbooks",
@@ -89,24 +62,21 @@ export default function Dashboard() {
         "Nonfiction",
         "Philosophy",
         "Poetry",
-        "Reference",
         "Religion",
         "Romance",
         "Science",
-        "Self Help",
-        "Social Science",
         "Sports",
         "Technology",
         "Travel",
-        "Young Adult",
     ];
-    // Romance e Ficção Científica
-    // Suspense e Mistério
-    // Não Ficção Histórica
-    // Poesia e Romance
-    // Romance e Mistério
-    // Fantasia e Aventura
-    // Narrativa histórica
+    // const availableGenres = [
+    //     "Romance", 
+    //     "Ficção", 
+    //     "Suspense", 
+    //     "Mistério", 
+    //     "Poesia", 
+    //     "Aventura", 
+    // ];
 
     // Função para atualizar o tipo de gráfico
     const handleChange = (event) => {
@@ -133,63 +103,94 @@ export default function Dashboard() {
             selectedGenres.length === 0
         )
             return;
-
+    
         try {
             const fetchGenreData = async (genre) => {
                 const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&startIndex=0&maxResults=40&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`;
-
+            
                 const response = await fetch(url);
                 const data = await response.json();
-
-                const monthlyAverages = {};
-
+            
+                const yearlyAverages = {};
+            
                 data.items.forEach((item) => {
                     const { publishedDate, averageRating } = item.volumeInfo;
+                    
                     if (publishedDate && averageRating) {
-                        const date = dayjs(publishedDate).format("MM-YYYY");
-                        if (!monthlyAverages[date]) {
-                            monthlyAverages[date] = { total: 0, count: 0 };
+                        const year = dayjs(publishedDate).year();
+                        
+                        // Verificação se o ano está dentro do intervalo desejado
+                        if (year >= parseInt(startDate) && year <= parseInt(endDate)) {
+                            if (!yearlyAverages[year]) {
+                                yearlyAverages[year] = { total: 0, count: 0 };
+                            }
+                            yearlyAverages[year].total += averageRating;
+                            yearlyAverages[year].count += 1;
                         }
-                        monthlyAverages[date].total += averageRating;
-                        monthlyAverages[date].count += 1;
                     }
                 });
-
+            
                 // Organizando os dados para o gráfico
                 const genreData = {
                     id: genre,
-                    data: Object.keys(monthlyAverages)
-                        .sort()
-                        .map((date) => ({
-                            x: date,
-                            y:
-                                monthlyAverages[date].count > 0
-                                    ? (
-                                          monthlyAverages[date].total /
-                                          monthlyAverages[date].count
-                                      ).toFixed(2)
-                                    : 0,
+                    data: Object.keys(yearlyAverages)
+                        .sort((a, b) => parseInt(a) - parseInt(b))
+                        .map((year) => ({
+                            x: year,
+                            y: (
+                                yearlyAverages[year].total /
+                                yearlyAverages[year].count
+                            ).toFixed(2),
                         })),
                 };
-
+            
                 return genreData;
             };
-
+            
+            // Obter os dados para todos os gêneros
             const allGenresData = await Promise.all(
                 selectedGenres.map(async (genre) => {
                     const genreData = await fetchGenreData(genre);
                     return genreData;
                 })
             );
-
-            setLineData(allGenresData);
+            
+            // Obter todos os anos no intervalo (em formato de Set para evitar duplicação)
+            const allYears = new Set();
+            allGenresData.forEach((genreData) => {
+                genreData.data.forEach((point) => {
+                    allYears.add(point.x); // Adiciona os anos de cada gênero
+                });
+            });
+    
+            // Criar dados unificados para cada gênero, incluindo anos sem dados
+            const unifiedData = allGenresData.map((genreData) => {
+                const unifiedGenreData = [];
+    
+                // Para cada ano no intervalo de anos, verifica se o gênero tem dados para esse ano
+                Array.from(allYears).sort((a, b) => parseInt(a) - parseInt(b)).forEach((year) => {
+                    const dataPoint = genreData.data.find((point) => point.x === year);
+    
+                    unifiedGenreData.push({
+                        x: year,
+                        y: dataPoint ? dataPoint.y : 0,
+                    });
+                });
+    
+                return {
+                    ...genreData,
+                    data: unifiedGenreData,
+                };
+            });
+    
+            setLineData(unifiedData);
+            console.log(unifiedData);
         } catch (error) {
-            console.error(
-                "Erro ao buscar dados para o gráfico de linha:",
-                error
-            );
+            console.error("Erro ao buscar dados para o gráfico de linha:", error);
         }
     };
+    
+    
 
     return (
         <div className="p-4 bg-gray-200 flex flex-row gap-6 w-full h-full">
@@ -245,20 +246,22 @@ export default function Dashboard() {
                     {/* Filtros de Data e Gênero */}
                     <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
                         <TextField
-                            label="Data Início"
-                            type="month"
+                            label="Ano de Início"
+                            type="number"
                             value={startDate}
                             onChange={(event) =>
                                 handleDateChange(event, "start")
                             }
                             InputLabelProps={{ shrink: true }}
+                            inputProps={{ min: 1900, max: 2100 }}
                         />
                         <TextField
-                            label="Data Fim"
-                            type="month"
+                            label="Ano de Fim"
+                            type="number"
                             value={endDate}
                             onChange={(event) => handleDateChange(event, "end")}
                             InputLabelProps={{ shrink: true }}
+                            inputProps={{ min: 1900, max: 2100 }}
                         />
                         <FormControl sx={{ minWidth: 200 }}>
                             <InputLabel>Selecione Gêneros</InputLabel>

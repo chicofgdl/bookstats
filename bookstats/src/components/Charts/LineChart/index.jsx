@@ -1,6 +1,28 @@
 import React from 'react';
 import { ResponsiveLine } from '@nivo/line';
 
+// Exemplo de dados para o gráfico de linhas
+// const lineData = [
+//     {
+//         id: "Romance",
+//         data: [
+//             { x: "2020", y: 350 },
+//             { x: "2021", y: 100 },
+//             { x: "2022", y: 150 },
+//             { x: "2023", y: 200 },
+//         ],
+//     },
+//     {
+//         id: "Terror",
+//         data: [
+//             { x: "2020", y: 150 },
+//             { x: "2021", y: 200 },
+//             { x: "2022", y: 250 },
+//             { x: "2023", y: 300 },
+//         ],
+//     }
+// ];
+
 const LineChart = ({ data }) => {
     return (
         <div style={{ height: 400 }}>
@@ -22,7 +44,7 @@ const LineChart = ({ data }) => {
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: 'Tempo',
+                    legend: 'Ano',
                     legendOffset: 36,
                     legendPosition: 'middle',
                 }}
