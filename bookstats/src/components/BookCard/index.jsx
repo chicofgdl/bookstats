@@ -2,9 +2,9 @@ import React from "react";
 import noImageAvailable from "../../assets/noImageAvailable.jpg";
 import Rating from "@mui/material/Rating";
 
-export default function BookCard({ title, author, genre, rating, coverImage }) {
+export default function BookCard({ title, author, genre, rating, coverImage, onClick }) {
     return (
-        <div className="px-4 py-6 bg-white rounded-lg shadow-md flex flex-col items-center justify-center relative hover:bg-gray-100 transition">
+        <div onClick={onClick} className="px-4 py-6 bg-white rounded-lg shadow-md flex flex-col items-center justify-center relative hover:bg-gray-100 transition">
             <div className="absolute top-2 right-2">
                 <Rating value={rating} precision={0.5} size="small" readOnly />
             </div>
