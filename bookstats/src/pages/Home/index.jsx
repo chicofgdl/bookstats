@@ -6,10 +6,17 @@ import Sidebar from "../../components/Sidebar";
 import { Box, IconButton } from "@mui/material";
 import { ArrowUpward } from "@mui/icons-material";
 import { SearchContext } from "../../context/SearchContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
     const [books, setBooks] = useState([]);
     const { searchTerm } = useContext(SearchContext);
+
+    const navigate = useNavigate();
+
+    const handleBookClick = (bookId) => {
+        navigate(`/books/${bookId}`);
+    };
 
     // Função para buscar livros na Google Books API
     useEffect(() => {
@@ -65,6 +72,7 @@ export default function Home() {
                                 genre={book.genre}
                                 rating={book.rating}
                                 coverImage={book.coverImage}
+                                onClick={() => handleBookClick(book.id)}
                             />
                         ))}
                     </div>
