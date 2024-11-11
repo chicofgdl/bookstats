@@ -1,6 +1,14 @@
 import React from 'react';
 import { ResponsivePie } from '@nivo/pie';
 
+// Exemplo de dados para o gráfico de pizza
+// const pieData = [
+//     { id: "Romance", label: "A", value: 55 },
+//     { id: "Programação", label: "A", value: 15 },
+//     { id: "Teror", label: "B", value: 25 },
+//     { id: "Aventura", label: "C", value: 20 },
+// ];
+
 const PieChart = ({ data }) => {
     return (
         <div style={{ height: 400 }}>
@@ -17,7 +25,16 @@ const PieChart = ({ data }) => {
                 enableArcLinkLabels={true}
                 enableArcLabels={true}
                 arcLinkLabel={(d) => `${d.id}`}
-                sortByValue={true}                
+                sortByValue={true}      
+                
+                radialLabelsSkipAngle={10}
+                radialLabelsTextColor="#333333"
+                radialLabelsLinkColor={{ from: "color" }}
+                sliceLabelsSkipAngle={10}
+                sliceLabelsTextColor="#333333"
+                animate={true}
+                motionStiffness={90}
+                motionDamping={15}
             />
         </div>
     );

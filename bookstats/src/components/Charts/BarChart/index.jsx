@@ -1,6 +1,14 @@
 import React from 'react';
 import { ResponsiveBar } from '@nivo/bar';
 
+// Exemplo de dados para o gráfico de barras
+// const barData = [
+//     { genre: "Romance", value: 55 },
+//     { genre: "Programação", value: 15 },
+//     { genre: "Teror", value: 25 },
+//     { genre: "Aventura", value: 20 },
+// ];
+
 const BarChart = ({ data }) => {
     return (
         <div style={{ height: 400 }}>
@@ -17,7 +25,7 @@ const BarChart = ({ data }) => {
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: 'Gêneros ou Anos',
+                    legend: 'Gêneros',
                     legendOffset: 36,
                     legendPosition: 'middle',
                 }}
@@ -25,10 +33,13 @@ const BarChart = ({ data }) => {
                     tickSize: 5,
                     tickPadding: 5,
                     tickRotation: 0,
-                    legend: 'Value',
+                    legend: 'Média das Avaliações',
                     legendOffset: -40,
                     legendPosition: 'middle',
                 }}
+                animate={true}
+                motionStiffness={90}
+                motionDamping={15}
             />
         </div>
     );
