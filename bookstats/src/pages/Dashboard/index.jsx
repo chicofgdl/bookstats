@@ -83,7 +83,7 @@ export default function Dashboard() {
 
         try {
             const fetchGenreRatingData = async (genre) => {
-                const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&startIndex=0&maxResults=40&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`;
+                const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&startIndex=0&maxResults=40`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -132,7 +132,7 @@ export default function Dashboard() {
 
         try {
             const fetchGenreData = async (genre) => {
-                const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&startIndex=0&maxResults=40&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`;
+                const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&startIndex=0&maxResults=40`;
 
                 const response = await fetch(url);
                 const data = await response.json();

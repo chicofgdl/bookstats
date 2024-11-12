@@ -93,7 +93,7 @@ export default function Bookshelves() {
                     {/* Botão para recarregar as estantes */}
                     <button
                         onClick={fetchBookshelves}
-                        className="mb-4 px-4 py-2 bg-green-500 hover:bg-green-700 text-white rounded"
+                        className={`mb-4 px-4 py-2 w-full sm:w-1/4 ${darkMode ? "bg-gray-800 hover:bg-gray-900/80":"bg-green-500 hover:bg-green-700"} text-white rounded`}
                     >
                         Recarregar Estantes
                     </button>
