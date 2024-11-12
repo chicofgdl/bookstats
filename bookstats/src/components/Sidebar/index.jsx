@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import { Link } from "react-router-dom";
-import { Home, Book, Dashboard, Settings, Info  } from "@mui/icons-material";
+import { Home, Book, Dashboard, Info  } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText, Typography, Box  } from "@mui/material";
 import { ThemeContext } from "../../context/ThemeContext";
 
@@ -45,20 +45,14 @@ export default function Sidebar() {
                     <ListItemText primary="Dashboard" primaryTypographyProps={{ style: { color: "white" } }} />
                 </ListItem>
 
-                {/* <ListItem component={Link} to="/settings" button>
-                    <ListItemIcon>
-                        <Settings style={{ color: "white" }} />
-                    </ListItemIcon>
-                    <ListItemText primary="Settings" primaryTypographyProps={{ style: { color: "white" } }} />
-                </ListItem> */}
             </List>
 
-            {/* "About" no final */}
+            {/* "BookBridge" no final */}
             <ListItem button>
                 <ListItemIcon>
                     <Info style={{ color: "white" }} />
                 </ListItemIcon>
-                <ListItemText primary="About" primaryTypographyProps={{ style: { color: "white" } }} />
+                <ListItemText primary="BookBridge" primaryTypographyProps={{ style: { color: "white" } }} />
             </ListItem>            
         </Box>
     );

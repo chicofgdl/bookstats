@@ -56,7 +56,8 @@ export default function BookDetails() {
         const fetchBookDetails = async () => {
             try {
                 const response = await axios.get(
-                    `https://www.googleapis.com/books/v1/volumes/${id}?}`
+                    `https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}
+`
                 );
                 const volumeInfo = response.data.volumeInfo;
                 setBook({

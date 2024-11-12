@@ -8,9 +8,14 @@ import { ArrowUpward } from "@mui/icons-material";
 import { SearchContext } from "../../context/SearchContext";
 import { ThemeContext } from "../../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import {
+    Home as HomeIcon,
+    Book as BookIcon,
+    Dashboard as DashboardIcon,
+} from "@mui/icons-material";
 
 export default function Home() {
-
     const { darkMode } = useContext(ThemeContext);
 
     const [books, setBooks] = useState([]);
@@ -30,7 +35,7 @@ export default function Home() {
         const fetchBooks = async () => {
             try {
                 const response = await axios.get(
-                    `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=20`
+                    `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=20&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`
                 );
                 const booksData = response.data.items.map((item) => ({
                     id: item.id,
@@ -59,12 +64,26 @@ export default function Home() {
     };
 
     return (
-        <div className={`p-4 ${darkMode ? "bg-gray-900" : "bg-gray-200"} flex flex-row gap-6 w-full h-full`}>
+        <div
+            className={`p-4 ${
+                darkMode ? "bg-gray-900" : "bg-gray-200"
+            } flex flex-row gap-6 w-full h-full`}
+        >
+            <div className={`hidden sm:flex lg:w-72 w-60 p-4 rounded-2xl ${ darkMode ? "bg-gray-700": "bg-green-500"}`}>
             <Sidebar />
+            </div>
             <div className="flex flex-col w-full gap-4">
                 <Navbar />
-                <div className={`flex flex-col items-center justify-center p-8 ${darkMode ? "bg-gray-700" : "bg-gray-50"} rounded-2xl`}>
-                    <h1 className={`text-3xl font-bold ${darkMode ? "text-white" : "text-gray-800"} mt-4 mb-8`}>
+                <div
+                    className={`flex flex-col items-center justify-center p-8 ${
+                        darkMode ? "bg-gray-700" : "bg-gray-50"
+                    } rounded-2xl`}
+                >
+                    <h1
+                        className={`text-3xl font-bold ${
+                            darkMode ? "text-white" : "text-gray-800"
+                        } mt-4 mb-8`}
+                    >
                         Bem-vindo ao BookStats
                     </h1>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 p-4">
@@ -92,7 +111,9 @@ export default function Home() {
                             onClick={scrollToTop}
                             style={{
                                 color: "white",
-                                backgroundColor: darkMode ? "#111827" : "#22c55e",
+                                backgroundColor: darkMode
+                                    ? "#111827"
+                                    : "#22c55e",
                                 borderRadius: "50%",
                                 boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                             }}
@@ -102,6 +123,21 @@ export default function Home() {
                     </Box>
                 </div>
             </div>
+            <footer
+                className={`fixed bottom-0 left-0 w-full ${
+                    darkMode ? "bg-gray-700" : "bg-green-500"
+                } flex justify-around items-center px-4 py-6 lg:hidden`}
+            >
+                <Link to="/" className="text-white">
+                    <HomeIcon />
+                </Link>
+                <Link to="/bookshelves" className="text-white">
+                    <BookIcon />
+                </Link>
+                <Link to="/dashboard" className="text-white">
+                    <DashboardIcon />
+                </Link>
+            </footer>
         </div>
     );
 }

@@ -15,6 +15,12 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs"; // Biblioteca para manipulação de datas
 import { ThemeContext } from "../../context/ThemeContext";
+import { Link } from "react-router-dom";
+import {
+    Home as HomeIcon,
+    Book as BookIcon,
+    Dashboard as DashboardIcon,
+} from "@mui/icons-material";
 
 // Defina o intervalo de anos que você quer mostrar (exemplo de 1900 a 2100)
 // const yearRange = Array.from({ length: 2101 - 1900 }, (_, index) => 1900 + index);
@@ -77,7 +83,7 @@ export default function Dashboard() {
 
         try {
             const fetchGenreRatingData = async (genre) => {
-                const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&startIndex=0&maxResults=40&`;
+                const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&startIndex=0&maxResults=40&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -126,7 +132,7 @@ export default function Dashboard() {
 
         try {
             const fetchGenreData = async (genre) => {
-                const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&startIndex=0&maxResults=40`;
+                const url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre}&startIndex=0&maxResults=40&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`;
 
                 const response = await fetch(url);
                 const data = await response.json();
@@ -226,7 +232,13 @@ export default function Dashboard() {
                 darkMode ? "bg-gray-900" : "bg-gray-200"
             } flex flex-row gap-6 w-full h-full`}
         >
-            <Sidebar />
+            <div
+                className={`hidden sm:flex lg:w-72 w-60 p-4 rounded-2xl ${
+                    darkMode ? "bg-gray-700" : "bg-green-500"
+                }`}
+            >
+                <Sidebar />
+            </div>
             <div className="flex flex-col w-full gap-4">
                 <Navbar />
 
@@ -244,8 +256,17 @@ export default function Dashboard() {
                     </h1>
 
                     {/* Seletor de gráfico */}
-                    <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
-                        <FormControl sx={{ mb: 4, minWidth: 150 }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 2,
+                            mb: 4,
+                            flexWrap: { xs: "wrap", sm: "nowrap" },
+                        }}
+                    >
+                        <FormControl
+                            sx={{ mb: { xs: 2, sm: 4 }, minWidth: 150 }}
+                        >
                             <InputLabel
                                 sx={{ color: darkMode ? "#fff" : "inherit" }}
                             >
@@ -284,7 +305,9 @@ export default function Dashboard() {
                                 </MenuItem>
                             </Select>
                         </FormControl>
-                        <FormControl sx={{ minWidth: 200, mb: 4 }}>
+                        <FormControl
+                            sx={{ minWidth: 200, mb: { xs: 2, sm: 4 } }}
+                        >
                             <InputLabel
                                 sx={{ color: darkMode ? "#fff" : "inherit" }}
                             >
@@ -296,14 +319,22 @@ export default function Dashboard() {
                                 onChange={handleGenreChange}
                                 renderValue={(selected) => selected.join(", ")}
                                 sx={{
-                                    backgroundColor: darkMode ? "#424242" : "white",
+                                    backgroundColor: darkMode
+                                        ? "#424242"
+                                        : "white",
                                     color: darkMode ? "#fff" : "inherit",
-                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: darkMode ? "#fff" : "gray",
-                                    },
-                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: darkMode ? "#fff" : "green",
-                                    },
+                                    "&:hover .MuiOutlinedInput-notchedOutline":
+                                        {
+                                            borderColor: darkMode
+                                                ? "#fff"
+                                                : "gray",
+                                        },
+                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                        {
+                                            borderColor: darkMode
+                                                ? "#fff"
+                                                : "green",
+                                        },
                                 }}
                             >
                                 {availableGenres.map((genre) => (
@@ -362,24 +393,41 @@ export default function Dashboard() {
                         Evolução da média de avaliações
                     </h1>
                     {/* Filtros de Data e Gênero */}
-                    <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 2,
+                            mb: 4,
+                            flexWrap: { xs: "wrap", sm: "nowrap" },
+                        }}
+                    >
                         <TextField
                             label="Ano de Início"
                             type="number"
                             value={startDate}
-                            onChange={(event) => handleDateChange(event, "start")}
+                            onChange={(event) =>
+                                handleDateChange(event, "start")
+                            }
                             slotProps={{
                                 input: { min: 1900, max: 2024 },
-                                inputLabel: { shrink: true, style: { color: darkMode ? "#fff" : "inherit" } },
+                                inputLabel: {
+                                    shrink: true,
+                                    style: {
+                                        color: darkMode ? "#fff" : "inherit",
+                                    },
+                                },
                             }}
                             sx={{
                                 backgroundColor: darkMode ? "#424242" : "white",
                                 "&:hover .MuiOutlinedInput-notchedOutline": {
                                     borderColor: darkMode ? "#fff" : "gray",
                                 },
-                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: darkMode ? "#fff" : "green",
-                                },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                    {
+                                        borderColor: darkMode
+                                            ? "#fff"
+                                            : "green",
+                                    },
                             }}
                         />
                         <TextField
@@ -389,16 +437,24 @@ export default function Dashboard() {
                             onChange={(event) => handleDateChange(event, "end")}
                             slotProps={{
                                 input: { min: 1900, max: 2024 },
-                                inputLabel: { shrink: true, style: { color: darkMode ? "#fff" : "inherit" } },
+                                inputLabel: {
+                                    shrink: true,
+                                    style: {
+                                        color: darkMode ? "#fff" : "inherit",
+                                    },
+                                },
                             }}
                             sx={{
                                 backgroundColor: darkMode ? "#424242" : "white",
                                 "&:hover .MuiOutlinedInput-notchedOutline": {
                                     borderColor: darkMode ? "#fff" : "gray",
                                 },
-                                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                    borderColor: darkMode ? "#fff" : "green",
-                                },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                    {
+                                        borderColor: darkMode
+                                            ? "#fff"
+                                            : "green",
+                                    },
                             }}
                         />
                         <FormControl sx={{ minWidth: 200 }}>
@@ -413,14 +469,22 @@ export default function Dashboard() {
                                 onChange={handleGenreChange}
                                 renderValue={(selected) => selected.join(", ")}
                                 sx={{
-                                    backgroundColor: darkMode ? "#424242" : "white",
+                                    backgroundColor: darkMode
+                                        ? "#424242"
+                                        : "white",
                                     color: darkMode ? "#fff" : "inherit",
-                                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: darkMode ? "#fff" : "gray",
-                                    },
-                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                                        borderColor: darkMode ? "#fff" : "green",
-                                    },
+                                    "&:hover .MuiOutlinedInput-notchedOutline":
+                                        {
+                                            borderColor: darkMode
+                                                ? "#fff"
+                                                : "gray",
+                                        },
+                                    "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                        {
+                                            borderColor: darkMode
+                                                ? "#fff"
+                                                : "green",
+                                        },
                                 }}
                             >
                                 {availableGenres.map((genre) => (
@@ -468,6 +532,21 @@ export default function Dashboard() {
                     </Box>
                 </div>
             </div>
+            <footer
+                className={`fixed bottom-0 left-0 w-full ${
+                    darkMode ? "bg-gray-700" : "bg-green-500"
+                } flex justify-around items-center px-4 py-6 lg:hidden`}
+            >
+                <Link to="/" className="text-white">
+                    <HomeIcon />
+                </Link>
+                <Link to="/bookshelves" className="text-white">
+                    <BookIcon />
+                </Link>
+                <Link to="/dashboard" className="text-white">
+                    <DashboardIcon />
+                </Link>
+            </footer>
         </div>
     );
 }
