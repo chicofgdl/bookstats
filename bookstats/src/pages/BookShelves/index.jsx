@@ -4,6 +4,8 @@ import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import { ThemeContext } from "../../context/ThemeContext";
 import noImageAvailable from "../../assets/noImageAvailable.jpg";
+import { Link } from "react-router-dom";
+import { Home as HomeIcon, Book as BookIcon, Dashboard as DashboardIcon } from "@mui/icons-material";
 
 export default function Bookshelves() {
     const [bookshelves, setBookshelves] = useState([]);
@@ -70,7 +72,9 @@ export default function Bookshelves() {
                 darkMode ? "bg-gray-900" : "bg-gray-200"
             } flex flex-row gap-6 w-full h-full`}
         >
+            <div className={`hidden sm:flex lg:w-72 w-60 p-4 rounded-2xl ${ darkMode ? "bg-gray-700": "bg-green-500"}`}>
             <Sidebar />
+            </div>
             <div className="flex flex-col w-full gap-4">
                 <Navbar />
                 <div
@@ -128,6 +132,21 @@ export default function Bookshelves() {
                     ))}
                 </div>
             </div>
+            <footer
+                className={`fixed bottom-0 left-0 w-full ${
+                    darkMode ? "bg-gray-700" : "bg-green-500"
+                } flex justify-around items-center px-4 py-6 lg:hidden`}
+            >
+                <Link to="/" className="text-white">
+                    <HomeIcon />
+                </Link>
+                <Link to="/bookshelves" className="text-white">
+                    <BookIcon />
+                </Link>
+                <Link to="/dashboard" className="text-white">
+                    <DashboardIcon />
+                </Link>
+            </footer>
         </div>
     );
 }

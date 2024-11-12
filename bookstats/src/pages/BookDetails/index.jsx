@@ -56,7 +56,8 @@ export default function BookDetails() {
         const fetchBookDetails = async () => {
             try {
                 const response = await axios.get(
-                    `https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`
+                    `https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}
+`
                 );
                 const volumeInfo = response.data.volumeInfo;
                 setBook({
@@ -145,6 +146,54 @@ export default function BookDetails() {
                                                 "<p>Não disponível</p>",
                                         }}
                                     ></div>
+                                    <div className="flex flex-row p-2 gap-6">
+                                        <select
+                                            className={`${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-700"
+                                            } p-2 rounded-xl text-white`}
+                                            onChange={(e) =>
+                                                setSelectedShelf(e.target.value)
+                                            }
+                                        >
+                                            <option value="">
+                                                Escolha estante
+                                            </option>
+                                            <option value="0">Favoritos</option>
+                                            <option value="1">
+                                                Lendo no momento
+                                            </option>
+                                            <option value="2">Vou ler</option>
+                                            <option value="3">Lidos</option>
+                                        </select>
+                                        <button
+                                            onClick={() =>
+                                                addToShelf(selectedShelf)
+                                            }
+                                            disabled={!selectedShelf}
+                                            className={`${
+                                                darkMode
+                                                    ? "bg-gray-700"
+                                                    : "bg-green-700"
+                                            } p-2 rounded-xl text-white`}
+                                        >
+                                            Adicionar
+                                        </button>
+                                        <button
+                                        className={`${
+                                            darkMode
+                                                ? "bg-gray-700"
+                                                : "bg-green-700"
+                                        } p-2 rounded-xl text-white`}
+                                            onClick={() =>
+                                                removeFromShelf(selectedShelf)
+                                            }
+                                            disabled={!selectedShelf}
+                                        >
+                                            Remover
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div
@@ -261,32 +310,6 @@ export default function BookDetails() {
                                     </p>
                                 </div>
                             </div>
-                        </div>
-                        <div>
-                            <label>Escolha uma estante:</label>
-                            <select
-                                onChange={(e) =>
-                                    setSelectedShelf(e.target.value)
-                                }
-                            >
-                                <option value="">Selecione</option>
-                                <option value="0">Favoritos</option>
-                                <option value="1">Lendo no momento</option>
-                                <option value="2">Vou ler</option>
-                                <option value="3">Lidos</option>
-                            </select>
-                            <button
-                                onClick={() => addToShelf(selectedShelf)}
-                                disabled={!selectedShelf}
-                            >
-                                Adicionar
-                            </button>
-                            <button
-                                onClick={() => removeFromShelf(selectedShelf)}
-                                disabled={!selectedShelf}
-                            >
-                                Remover
-                            </button>
                         </div>
                     </div>
                 </div>
