@@ -30,7 +30,7 @@ export default function Home() {
         const fetchBooks = async () => {
             try {
                 const response = await axios.get(
-                    `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=20&key=${process.env.REACT_APP_GOOGLE_BOOKS_API_KEY}`
+                    `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=20`
                 );
                 const booksData = response.data.items.map((item) => ({
                     id: item.id,
